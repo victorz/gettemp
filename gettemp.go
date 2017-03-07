@@ -28,6 +28,7 @@ func main() {
 
     type WeatherData struct {
         Temperature string `xml:"root>tempmed"`
+        WindSpeed string `xml:"root>vindh"`
         WindChill string `xml:"root>windChill"`
     }
 
@@ -49,11 +50,16 @@ func main() {
 
     // Prepare for conversion
     tempStr := convprep(v.Temperature)
-    windStr := convprep(v.WindChill)
+    windSpeedStr := convprep(v.WindSpeed)
+    windChillStr := convprep(v.WindChill)
 
     temp, _ := strconv.ParseFloat(tempStr, 32)
-    windChill, _ := strconv.ParseFloat(windStr, 32)
+    windSpeed, _ := strconv.ParseFloat(windSpeedStr, 32)
+    windChill, _ := strconv.ParseFloat(windChillStr, 32)
 
     // Output
-    fmt.Printf("Current temp: %.1f°C\nFeels like: %.1f°C\n", temp, windChill)
-}
+    fmt.Printf(
+        "Current temp: %.1f°C\n" +
+        "Feels like: %.1f°C\n" +
+        "Wind speed: %.1f m/s\n", temp, windChill, windSpeed)
+    }
