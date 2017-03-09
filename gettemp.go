@@ -52,7 +52,7 @@ func main() {
     windChill := convval(v.WindChill)
 
     // Output
-    fmt.Printf("Current temp: %.1fC\n", temp);
+    fmt.Printf("Current temp: %.1f°C\n", temp);
 
     if windSpeed < 1.2 {
         fmt.Println("Negligible wind chill.");
