@@ -9,18 +9,17 @@ import (
     "fmt"
 )
 
-// Prepares string before float conversion by replacing decimal comma with
-// decimal point and trimming white space.
-func convprep(str string) (out string) {
-    out = strings.Replace(str, ",", ".", 1)
-    out = strings.Trim(out, " ")
-    return
-}
-
 // Convert HTML entity angle brackets to actual angle brackets
 func formatXml(data string) (xml string) {
     xml = strings.Replace(data, "&lt;", "<", -1)
     xml = strings.Replace(xml, "&gt;", ">", -1)
+    return
+}
+
+func convval(str string) (out float64) {
+    str = strings.Replace(str, ",", ".", 1)
+    str = strings.Trim(str, " ")
+    out, _ = strconv.ParseFloat(str, 64)
     return
 }
 
@@ -48,18 +47,18 @@ func main() {
     v := WeatherData{ Temperature: "none" }
     xml.Unmarshal([]byte(xmlStr), &v)
 
-    // Prepare for conversion
-    tempStr := convprep(v.Temperature)
-    windSpeedStr := convprep(v.WindSpeed)
-    windChillStr := convprep(v.WindChill)
-
-    temp, _ := strconv.ParseFloat(tempStr, 32)
-    windSpeed, _ := strconv.ParseFloat(windSpeedStr, 32)
-    windChill, _ := strconv.ParseFloat(windChillStr, 32)
+    temp := convval(v.Temperature)
+    windSpeed := convval(v.WindSpeed)
+    windChill := convval(v.WindChill)
 
     // Output
-    fmt.Printf(
-        "Current temp: %.1f°C\n" +
-        "Feels like: %.1f°C\n" +
-        "Wind speed: %.1f m/s\n", temp, windChill, windSpeed)
+    fmt.Printf("Current temp: %.1fC\n", temp);
+
+    if windSpeed < 1.2 {
+        fmt.Println("Negligible wind chill.");
+    } else {
+        fmt.Printf("Feels like: %.1f°C\n", windChill);
     }
+
+    fmt.Printf("Wind speed: %.1f m/s\n", windSpeed);
+}
