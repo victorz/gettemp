@@ -7,6 +7,7 @@ import (
     "strings"
     "strconv"
     "fmt"
+    "math"
 )
 
 // Convert HTML entity angle brackets to actual angle brackets
@@ -21,6 +22,16 @@ func convval(str string) (out float64) {
     str = strings.Trim(str, " ")
     out, _ = strconv.ParseFloat(str, 64)
     return
+}
+
+// Calculates wind chill based on temperature and wind speed.
+// Formula taken from: http://www8.tfe.umu.se/weather-new/js/index.js.
+func calcWindChill(temp, speed float64) float64 {
+    expTmp := math.Pow(speed, 0.16)
+    return 13.126667 +
+        0.6215 * temp -
+        13.924748 * expTmp +
+        0.4875195 * temp * expTmp
 }
 
 func main() {
@@ -49,7 +60,8 @@ func main() {
 
     temp := convval(v.Temperature)
     windSpeed := convval(v.WindSpeed)
-    windChill := convval(v.WindChill)
+    //windChill := convval(v.WindChill)
+    windChill := calcWindChill(temp, windSpeed)
 
     // Output
     fmt.Printf("Current temp: %.1f°C\n", temp);
