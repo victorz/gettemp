@@ -8,6 +8,8 @@ import (
     "strconv"
     "fmt"
     "math"
+    "time"
+    "os"
 )
 
 // Convert HTML entity angle brackets to actual angle brackets
@@ -34,6 +36,30 @@ func calcWindChill(temp, speed float64) float64 {
         0.4875195 * temp * expTmp
 }
 
+// LOGGING
+
+// Get the current date in ISO 8601.
+func getDate() string {
+    now := time.Now()
+    return fmt.Sprintf("%s", now.Format("2006-01-02"))
+}
+
+// Log date and temp, semi-colon separated.
+func logTemp(f *os.File, temp float64) {
+    f.WriteString(fmt.Sprintf("%s;%.1f\n", getDate(), temp))
+}
+
+func getLogFile(fileName string) *os.File {
+    flags := os.O_WRONLY | os.O_APPEND | os.O_CREATE
+    f, err := os.OpenFile(fileName, flags, 0644)
+
+    if err != nil {
+        panic(err)
+    }
+
+    return f
+}
+
 func main() {
 
     type WeatherData struct {
@@ -55,7 +81,7 @@ func main() {
     xmlStr := formatXml(string(bytes));
 
     // Parse XML
-    v := WeatherData{ Temperature: "none" }
+    var v WeatherData
     xml.Unmarshal([]byte(xmlStr), &v)
 
     temp := convval(v.Temperature)
@@ -73,4 +99,12 @@ func main() {
     }
 
     fmt.Printf("Wind speed: %.1f m/s\n", windSpeed);
+
+    // log date and time to a file provided on the commandline.
+    if len(os.Args) > 1 {
+        logFile := getLogFile(os.Args[1])
+        defer logFile.Close()
+
+        logTemp(logFile, temp)
+    }
 }
