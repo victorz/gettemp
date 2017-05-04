@@ -73,8 +73,8 @@ var directions = [...]string{
 }
 
 func getDirection(deg float64) string {
-	var index int = int(deg/45.0 + 0.5)
-	return directions[index%len(directions)]
+	var index int = int(deg / 45.0 + 0.5)
+	return directions[index % len(directions)]
 }
 
 func main() {
