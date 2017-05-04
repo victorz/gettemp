@@ -60,12 +60,29 @@ func getLogFile(fileName string) *os.File {
 	return f
 }
 
+var directions = [...]string{
+	"North",
+	"Northeast",
+	"East",
+	"Southeast",
+	"South",
+	"Southwest",
+	"West",
+	"Northwest",
+}
+
+func getDirection(deg float64) string {
+	var index int = int(deg/45.0 + 0.5)
+	return directions[index%len(directions)]
+}
+
 func main() {
 
 	type WeatherData struct {
 		Temperature   string `xml:"root>tempmed"`
 		WindSpeed	  string `xml:"root>vindh"`
 		WindChill	  string `xml:"root>windChill"`
+		WindDirection string `xml:"root>vindr"`
 	}
 
 	// Weather data URL
@@ -99,6 +116,8 @@ func main() {
 	}
 
 	fmt.Printf("Wind speed: %.1f m/s\n", windSpeed)
+	windDir, _ := strconv.ParseFloat(v.WindDirection, 32)
+	fmt.Printf("Wind direction: %v\n", getDirection(windDir))
 
 	// log date and time to a file provided on the commandline.
 	if len(os.Args) > 1 {
