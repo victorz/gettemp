@@ -118,7 +118,7 @@ func main() {
 
 	fmt.Printf("Wind speed: %.1f m/s\n", windSpeed)
 	windDir, _ := strconv.ParseFloat(v.WindDirection, 32)
-	fmt.Printf("Wind direction: %v\n", getDirection(windDir))
+	fmt.Printf("Wind direction: %v (%v deg)\n", getDirection(windDir), windDir)
 
 	// log date and time to a file provided on the commandline.
 	if len(os.Args) > 1 {
