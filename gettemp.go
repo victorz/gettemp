@@ -42,7 +42,6 @@ func calcWindChill(temp, speed float64) float64 {
 func getDate() string {
 	now := time.Now()
 	return fmt.Sprintf("%s", now.Format("2006-01-02"))
-	return fmt.Sprintf("%s", now.Format("2006-01-02 15:04:05"))
 }
 
 // Log date and temp, semi-colon separated.
